@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@tailwind utilities;
+
+@theme {
+  /* brand (blue) */
+  --color-brand-50:  #E6F2FA;
+  --color-brand-100: #CCE5F5;
+  --color-brand-200: #99CCEB;
+  --color-brand-300: #66B2E0;
+  --color-brand-400: #3389C7;
+  --color-brand-500: #005B99; /* main blue */
+  --color-brand-600: #004D80;
+  --color-brand-700: #003E66;
+  --color-brand-800: #00314D;
+  --color-brand-900: #002333;
+  --color-brand-950: #001A26;
+
+  /* accent (green) */
+  --color-accent-50:  #F2FAE6;
+  --color-accent-100: #E6F4CD;
+  --color-accent-200: #CEEAA1;
+  --color-accent-300: #B8DF79;
+  --color-accent-400: #AEDD66;
+  --color-accent-500: #A4D65E; /* main green */
+  --color-accent-600: #8CBE46;
+  --color-accent-700: #74A62E;
+  --color-accent-800: #5C8E16;
+  --color-accent-900: #476F10;
+  --color-accent-950: #2F470A;
+}
