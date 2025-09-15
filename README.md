@@ -1,75 +1,31 @@
-# Nuxt Minimal Starter
+# Integral Motions Configurator
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Prerequisites
+To run this project you need to have bun installed. To install bun follow the install guide [here](https://bun.com)
 
 ## Setup
 
-Make sure to install dependencies:
+To run the program follow the steps below:
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
 bun install
+bun run dev -o
 ```
 
-## Development Server
+You should have a development server running on `http://localhost:3000`.
 
-Start the development server on `http://localhost:3000`:
+## Component Library
 
-```bash
-# npm
-npm run dev
+We use Nuxt UI as our component library, the docs for this are available [here](https://ui.nuxt.com/getting-started)
 
-# pnpm
-pnpm dev
+## Usage
 
-# yarn
-yarn dev
+This site can be used to configure the motor driver. 
+Below you can see a screenshot of the application.
+To start, simply connect the device using usb to your device.
+You can now click the **connect** button on the page, this will connect with your device and display the options you can configure.
+When you change a configuration, it will be marked. 
+All marked changes will be sent back to the device when you cluck the **save** button. 
+After saving it will read the configuration again and display the settings with the changes applied.
 
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+<img width="1470" height="837" alt="image" src="https://github.com/user-attachments/assets/5b19d093-8ac1-4019-a577-0ccfed02fcbe" />
