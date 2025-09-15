@@ -1,39 +1,44 @@
 <script setup lang="ts">
-type Bool = { id: string; label: string; type: 'bool'; value: boolean; unit?: string; readonly?: boolean }
-type Num = { id: string; label: string; type: 'int' | 'float' | 'range'; value: number; min?: number; max?: number; step?: number; unit?: string; readonly?: boolean }
-type Str = { id: string; label: string; type: 'string'; value: string; unit?: string; readonly?: boolean }
-type Enm = { id: string; label: string; type: 'enum'; value: string | number; options: (string | number)[]; unit?: string; readonly?: boolean }
-type Setting = Bool | Num | Str | Enm
-
 const props = defineProps<{ setting: Setting; modelValue: any; dirty?: boolean }>()
 const emit = defineEmits(['update:modelValue'])
 
-function inputFor(s: Setting) {
-    if (s.type === 'bool') return resolveComponent('USwitch')
-    if (s.type === 'enum') return resolveComponent('USelect')
-    if (s.type === 'range') return resolveComponent('USlider')
-    return resolveComponent('UInput')
-}
-function inputProps(s: Setting) {
-    if (s.type === 'bool') return { size: 'md', disabled: s.readonly }
-    if (s.type === 'enum') return { size: 'md', options: (s as Enm).options, disabled: s.readonly }
-    const p: any = { size: 'md', type: s.type === 'string' ? 'text' : 'number', step: (s as any).step ?? 1, disabled: s.readonly }
-    if ('min' in s && s.min !== undefined) p.min = s.min
-    if ('max' in s && s.max !== undefined) p.max = s.max
-    return p
-}
+const value = computed({
+    get: () => props.modelValue,
+    set: v => emit('update:modelValue', v)
+})
+
 </script>
 
 <template>
     <div class="py-2">
         <div class="flex items-center justify-between gap-3 mb-1">
             <div class="text-sm font-medium">{{ setting.label }}</div>
-            <UBadge v-if="dirty" color="primary" variant="subtle">modified</UBadge>
+            <UBadge v-if="dirty" color="primary" variant="subtle" size="sm">modified</UBadge>
         </div>
         <div class="flex items-center gap-3">
-            <component :is="inputFor(setting)" :model-value="modelValue" v-bind="inputProps(setting)"
-                @update:model-value="v => emit('update:modelValue', v)" class="flex-1" />
-            <span v-if="setting.unit" class="text-xs opacity-60 w-16 text-right">{{ setting.unit }}</span>
+            <template v-if="setting.type === 'bool'">
+                <USwitch v-model="value" size="md" :disabled="setting.readonly" />
+            </template>
+
+            <template v-if="setting.type === 'string'">
+                <UInput v-model="value" size="md" :disabled="setting.readonly" />
+            </template>
+
+            <template v-if="setting.type === 'options'">
+                <UInputMenu v-model="value" size="md" :items="setting.options" :disabled="setting.readonly" />
+            </template>
+
+            <template v-if="setting.type === 'int' || setting.type === 'float'">
+                <UInputNumber v-model="value" size="md" :disabled="setting.readonly" :min="setting.min"
+                    :max="setting.max" :step="setting.step" />
+            </template>
+
+            <template v-if="setting.type === 'range'">
+                <USlider v-model="value" size="md" :disabled="setting.readonly" :min="setting.min" :max="setting.max"
+                    :step="setting.step" tooltip class="my-2" />
+            </template>
+
+            <span v-if="setting.unit" class="text-xs opacity-60 text-right">{{ setting.unit }}</span>
         </div>
     </div>
 </template>

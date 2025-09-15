@@ -9,5 +9,11 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
-  },
+    server: {
+      watch: {
+        usePolling: true
+      },
+
+    }
+  }
 })
