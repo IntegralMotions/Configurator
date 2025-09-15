@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/nuxt';
+
+</script>
+
 <template>
   <UApp>
     <NuxtLoadingIndicator />
@@ -5,4 +10,5 @@
       <NuxtPage />
     </main>
   </UApp>
+  <SpeedInsights />
 </template>
