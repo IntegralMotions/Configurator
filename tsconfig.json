@@ -18,4 +18,10 @@
       "path": "./.nuxt/tsconfig.json"
     }
   ],
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "DOM"
+    ]
+  }
 }
