@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDataView } from 'util/types';
 import UsbProtocolSelector from '~/components/UsbProtocolSelector.vue';
 
 const message = ref<string>('')
@@ -18,7 +19,7 @@ const uiPreferences = useState('serial.uiPreferences', () => ({
 }))
 
 async function toggleConnect() {
-    if (usb.connected) {
+    if (usb.connected.value) {
         usb.close()
     }
     else {
@@ -27,16 +28,37 @@ async function toggleConnect() {
 }
 
 async function send() {
+    const bytes = new TextEncoder().encode(message.value);
 
+    message.value = '';
 }
+
+function receive(received: Uint8Array<ArrayBufferLike>) {
+    console.log(received)
+    data.value += new TextDecoder().decode(received)
+}
+
+const data = ref('')
+
+usb.onData(receive)
 
 </script>
 
 <template>
     <UnsupportedBrowser />
-    <template v-if="usb.isSupported">
+    <template v-if="usb.isSupported.value">
         <UsbProtocolSelector />
         <ScrollContent>
+            <template #header>
+                <div class="flex">
+                    <UChip standalone inset class="mr-2" :color="usb.connected.value ? 'success' : 'error'">
+                    </UChip>
+                    {{ usb.deviceName.value }}
+                </div>
+            </template>
+            <template #default>
+                <UTextarea v-model="data" class="grow w-full flex-1 my-2"></UTextarea>
+            </template>
             <template #footer>
                 <div class="flex">
                     <UModal title="Settings"
@@ -105,7 +127,9 @@ async function send() {
                         </template>
                     </UModal>
 
-                    <!-- Chat input -->
+                    <UButton icon="material-symbols:delete-outline-rounded" variant="ghost" size="lg" class="mr-4"
+                        @click="(_) => { data = ''; }" />
+
                     <UInput v-model="message" placeholder="Type a command…" size="xl" class="flex-1"
                         @keyup.enter="send">
                         <template #trailing>
@@ -114,10 +138,10 @@ async function send() {
                     </UInput>
 
                     <!-- Connect / Disconnect -->
-                    <UButton :color="usb.connected ? 'error' : 'primary'"
-                        :icon="usb.connected ? 'material-symbols:power-plug-off-rounded' : 'material-symbols:power-plug-rounded'"
-                        @click="toggleConnect" class="ml-4">
-                        {{ usb.connected ? 'Disconnect' : 'Connect' }}
+                    <UButton :color="usb.connected.value ? 'error' : 'primary'"
+                        :icon="usb.connected.value ? 'material-symbols:power-plug-off-rounded' : 'material-symbols:power-plug-rounded'"
+                        :disabled="!usb.hasDevice.value" @click="toggleConnect" class="ml-4">
+                        {{ usb.connected.value ? 'Disconnect' : 'Connect' }}
                     </UButton>
                 </div>
             </template>
