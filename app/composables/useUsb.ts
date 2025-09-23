@@ -31,7 +31,7 @@ export const useUsb = () => {
   const serialOpen = ref(false);
 
   const reader = ref<ReadableStreamDefaultReader<Uint8Array> | null>(null)
-  const reading = ref(true);
+  const reading = ref(false);
 
   const queue = useState<Uint8Array[]>('usb.queue', () => [])
   const onDataCallbacks = new Set<(data: Uint8Array) => void>()
@@ -101,19 +101,15 @@ export const useUsb = () => {
 
   async function requestSerial(filters?: SerialPortFilter[]) {
     if (!serialSupported.value) throw new Error('Web Serial not supported')
+    console.log("|SERIAL| Request port")
     // @ts-expect-error lib typing
     serialPort.value = await navigator.serial.requestPort(filters ? { filters } : {})
     return serialPort.value
   }
 
   async function connect() {
-    if (protocol.value === 'serial') {
-      await connectSerial();
-    }
-
-    if (protocol.value === 'usb') {
-      await connectUsb();
-    }
+    if (protocol.value === 'serial') await connectSerial();
+    if (protocol.value === 'usb') await connectUsb();
 
     startReceive();
   }
@@ -131,6 +127,7 @@ export const useUsb = () => {
     if (!serialPort.value) await requestSerial()
     if (!serialPort.value) throw new Error('No serial port')
     if (!serialOpen.value) {
+      console.log("|SERIAL| Connecting")
       await serialPort.value.open(settings.value)
       serialOpen.value = true
     }
@@ -138,8 +135,10 @@ export const useUsb = () => {
   }
 
   async function close() {
-    if (protocol.value === 'serial') return closeSerial()
-    if (protocol.value === 'usb') return closeUsb()
+    await stopReceive();
+
+    if (protocol.value === 'serial') await closeSerial()
+    if (protocol.value === 'usb') await closeUsb()
   }
 
   async function closeUsb() {
@@ -148,6 +147,7 @@ export const useUsb = () => {
   }
 
   async function closeSerial() {
+    console.log("|SERIAL| Close connection")
     if (serialPort.value && serialOpen.value) {
       await serialPort.value.close()
       serialOpen.value = false
@@ -157,30 +157,34 @@ export const useUsb = () => {
 
   async function startReceive() {
     if (reading.value) return
-    if (protocol.value === 'serial') startReceiveSerial()
-    if (protocol.value === 'usb') startReceiveUsb()
+    if (protocol.value === 'serial') await startReceiveSerial()
+    if (protocol.value === 'usb') await startReceiveUsb()
   }
 
   async function startReceiveSerial() {
     if (!serialPort.value?.readable) return
     reader.value = serialPort.value.readable.getReader()
     reading.value = true
+    console.log("|SERIAL| Start receiving data")
 
     try {
       while (reading.value) {
         if (reader.value === null) {
+          console.log("|SERIAL| Reader null")
           break;
         }
         const { value, done } = await reader.value.read()
         if (done) {
+          console.log("|SERIAL| Closing reader")
           break;
         }
         if (value) {
+          console.log(value);
           handleIncoming(value);
         }
       }
     } catch (err) {
-      console.error('Serial receive error:', err)
+      console.error('|SERIAL| Received error:', err)
     } finally {
       await stopReceive()
     }
@@ -202,6 +206,7 @@ export const useUsb = () => {
       while (reading.value) {
         const result = await usbDevice.value.transferIn(epIn, 64)
         if (result.data) {
+          console.log(result.data);
           handleIncoming(result.data);
         }
       }
@@ -213,6 +218,7 @@ export const useUsb = () => {
   }
 
   async function stopReceive() {
+    console.log("|SERIAL| Stop receiving")
     reading.value = false
     try { await reader.value?.cancel() } catch { }
     try { reader.value?.releaseLock() } catch { }
@@ -220,18 +226,28 @@ export const useUsb = () => {
   }
 
   async function write(bytes: Uint8Array) {
-    if (protocol.value === 'serial') {
-      if (!serialPort.value?.writable) return
-      const w = serialPort.value.writable.getWriter()
-      await w.write(bytes); w.releaseLock(); return
-    }
-    if (protocol.value === 'usb' && usbDevice.value) {
-      if (!usbDevice.value.opened) await usbDevice.value.open()
-      await usbDevice.value.selectConfiguration(1)
-      // await usbDevice.value.claimInterface(usbIface.value)
-      // await usbDevice.value.transferOut(usbEpOut.value, bytes)
-    }
+    if (protocol.value === 'serial') await writeSerial(bytes)
+    if (protocol.value === 'usb' && usbDevice.value) await writeUsb(bytes)
   }
+
+  async function writeSerial(bytes: Uint8Array) {
+    if (!serialPort.value?.writable) {
+      return
+    }
+    console.log("|SERIAL| Writing bytes");
+    const w = serialPort.value.writable.getWriter()
+    await w.write(bytes); w.releaseLock();
+  }
+
+  async function writeUsb(bytes: Uint8Array) {
+    if (!usbDevice.value.opened) {
+      await usbDevice.value.open()
+    }
+    await usbDevice.value.selectConfiguration(1)
+    // await usbDevice.value.claimInterface(usbIface.value)
+    // await usbDevice.value.transferOut(usbEpOut.value, bytes)
+  }
+
 
   if (import.meta.client && serialSupported.value) {
     // @ts-expect-error lib typing
