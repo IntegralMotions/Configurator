@@ -1,7 +1,7 @@
 <!-- /layouts/default.vue -->
 <template>
-    <main class="min-h-screen max-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-        <div class="min-h-screen max-h-screen flex flex-col">
+    <main class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+        <div class="min-h-screen flex flex-col">
             <header class="sticky top-0 z-50 border-b border-gray-800/50 bg-background/80 backdrop-blur">
                 <UContainer class="py-3">
                     <div class="flex items-center gap-4">
@@ -21,7 +21,7 @@
                 </UContainer>
             </header>
 
-            <div class="p-6 flex-1 min-h-0 flex">
+            <div class="p-6 grow flex">
                 <slot />
             </div>
         </div>
