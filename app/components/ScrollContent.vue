@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full grow">
+  <div class="flex w-full grow" :class="horizontal ? 'flex-row' : 'flex-col'">
     <div v-if="$slots.header" class="flex-shrink-0">
       <slot name="header" />
     </div>

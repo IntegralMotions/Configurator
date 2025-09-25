@@ -1,10 +1,8 @@
 <template>
-  <Teleport to="#header-right">
-    <div v-if="usb.isSupported.value" class="flex items-center gap-3">
-      <USelect v-model="usb.protocol.value" :items="usb.protocolOptions.value" class="w-24" />
-      <UButton :disabled="!canConnect" @click="usb.request()">Request Device</UButton>
-    </div>
-  </Teleport>
+  <div v-if="usb.isSupported.value" class="flex items-center gap-3">
+    <USelect v-model="usb.protocol.value" :items="usb.protocolOptions.value" class="w-24" />
+    <UButton :disabled="!canConnect" @click="usb.request()">Request Device</UButton>
+  </div>
 </template>
 
 <script setup lang="ts">

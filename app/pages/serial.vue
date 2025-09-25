@@ -49,13 +49,19 @@ usb.onData(receive)
 
         <UnsupportedBrowser />
         <template v-if="usb.isSupported.value">
-            <UsbProtocolSelector />
             <ScrollContent>
                 <template #header>
                     <div class="flex">
-                        <UChip standalone inset class="mr-2" :color="usb.connected.value ? 'success' : 'error'">
-                        </UChip>
-                        {{ usb.deviceName.value }}
+                        <ScrollContent :horizontal="true">
+                            <template #header>
+                                <UChip standalone inset class="mr-2" :color="usb.connected.value ? 'success' : 'error'">
+                                </UChip>
+                                {{ usb.deviceName.value }}
+                            </template>
+                            <template #footer>
+                                <UsbProtocolSelector />
+                            </template>
+                        </ScrollContent>
                     </div>
                 </template>
                 <template #default>
@@ -112,18 +118,20 @@ usb.onData(receive)
                                         </div>
                                     </template>
                                     <template #ui>
-                                        <UFormField label="Auto scroll">
-                                            <USwitch v-model="uiPreferences.autoScroll" />
-                                        </UFormField>
-                                        <UFormField label="Show timestamps">
-                                            <USwitch v-model="uiPreferences.timestamps" />
-                                        </UFormField>
-                                        <UFormField label="Send on Enter">
-                                            <USwitch v-model="uiPreferences.sendOnEnter" />
-                                        </UFormField>
-                                        <UFormField label="Hex view">
-                                            <USwitch v-model="uiPreferences.hexView" />
-                                        </UFormField>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <UFormField label="Auto scroll">
+                                                <USwitch v-model="uiPreferences.autoScroll" />
+                                            </UFormField>
+                                            <UFormField label="Show timestamps">
+                                                <USwitch v-model="uiPreferences.timestamps" />
+                                            </UFormField>
+                                            <UFormField label="Send on Enter">
+                                                <USwitch v-model="uiPreferences.sendOnEnter" />
+                                            </UFormField>
+                                            <UFormField label="Hex view">
+                                                <USwitch v-model="uiPreferences.hexView" />
+                                            </UFormField>
+                                        </div>
                                     </template>
                                 </UTabs>
                             </template>
