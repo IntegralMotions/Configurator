@@ -1,63 +1,35 @@
 <template>
-  <UContainer class="py-5 space-y-6">
-    <header class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <Icon name="ph:sliders-horizontal" size="22" />
-        <h1 class="text-xl font-semibold">Integral Motion — Configurator </h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <USelect v-model="transport" :options="['WebUSB', 'WebSerial']" size="sm" />
-        <UButton :loading="busy" @click="connect">{{ connected ? 'Disconnect' : 'Connect' }}</UButton>
-      </div>
-    </header>
+  <UContainer class="flex items-center justify-center">
+    <div class="grid gap-12 md:grid-cols-2 max-w-6xl w-full">
+      <NuxtLink to="/serial" class="block">
+        <UCard class="overflow-hidden flex flex-col h-full transition hover:shadow-lg">
+          <div
+            class="h-64 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-100 dark:from-slate-800 dark:to-slate-700">
+            <UIcon name="i-ph-serial-port" class="w-24 h-24 opacity-80" />
+          </div>
+          <div class="p-8 space-y-3">
+            <h2 class="text-2xl font-semibold">Serial Monitor</h2>
+            <p class="text-base opacity-80">Live stream, filtering, quick export.</p>
+          </div>
+        </UCard>
+      </NuxtLink>
 
-    <UCard v-if="connected">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="text-sm opacity-80">
-          <span class="font-medium">{{ payload.deviceInfo?.model }}</span>
-          <span class="mx-2">•</span>
-          FW {{ payload.deviceInfo?.fw }}
-        </div>
-        <div class="flex items-center gap-3">
-          <UBadge :color="isDirty ? 'primary' : 'secondary'" variant="subtle">
-            {{ isDirty ? 'Unsaved changes' : 'Synced' }}
-          </UBadge>
-          <UButton variant="soft" @click="readAll">Read</UButton>
-          <UButton :disabled="!isDirty" @click="writeAll">Write</UButton>
-        </div>
-      </div>
-    </UCard>
-
-    <UTabs v-if="connected" :items="payload.modules" class="gap-5">
-      <template #content="{ item }">
-        <div class="grid gap-5 md:grid-cols-2">
-          <UCard v-for="g in item.groups" :key="g.id">
-            <template #header>
-              <div class="flex items-center justify-between">
-                <h2 class="text-base font-semibold">{{ g.label }}</h2>
-                <UButton size="xs" variant="ghost" @click="resetGroup(item.id, g.id)"
-                  :disabled="!groupDirty(item.id, g.id)">
-                  Reset
-                </UButton>
-              </div>
-            </template>
-
-            <div class="divide-y divide-gray-200/60 dark:divide-gray-800">
-              <SettingField v-for="s in g.settings" :key="s.id" :setting="s" v-model="values[s.id]"
-                :dirty="isSettingDirty(s.id)" />
-            </div>
-          </UCard>
-        </div>
-      </template>
-    </UTabs>
-
-    <UAlert v-else icon="i-heroicons-information-circle" title="Not connected"
-      description="Choose a transport and connect to load settings." />
+      <NuxtLink to="/configurator" class="block">
+        <UCard class="overflow-hidden flex flex-col h-full transition hover:shadow-lg">
+          <div
+            class="h-64 flex items-center justify-center bg-gradient-to-br from-indigo-400 to-indigo-600 dark:from-indigo-700 dark:to-indigo-900">
+            <UIcon name="i-ph-sliders-bold" class="w-24 h-24 opacity-80 text-white" />
+          </div>
+          <div class="p-8 space-y-3">
+            <h2 class="text-2xl font-semibold">Configurator</h2>
+            <p class="text-base opacity-80">Tune parameters, save/load presets.</p>
+          </div>
+        </UCard>
+      </NuxtLink>
+    </div>
   </UContainer>
 </template>
 
-<script setup lang="ts">
-const { transport, connected, busy, payload, values,
-  isDirty, isSettingDirty, groupDirty,
-  connect, readAll, writeAll, resetGroup } = useConfigurator()
-</script>
+<script lang="ts" setup></script>
+
+<style></style>

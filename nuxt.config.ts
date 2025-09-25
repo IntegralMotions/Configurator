@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@nuxt/test-utils'],
   css: ['~/assets/css/main.css'],
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        lib: ['ESNext', 'DOM', 'DOM.Iterable']
+      }
+    }
+  },
   vite: {
     plugins: [
       tailwindcss(),
