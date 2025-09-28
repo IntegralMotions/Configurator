@@ -45,9 +45,8 @@ usb.onData(receive)
 </script>
 
 <template>
-    <ClientOnly>
+    <UnsupportedBrowser>
 
-        <UnsupportedBrowser />
         <template v-if="usb.isSupported.value">
             <ScrollContent>
                 <template #header>
@@ -157,5 +156,5 @@ usb.onData(receive)
                 </template>
             </ScrollContent>
         </template>
-    </ClientOnly>
+    </UnsupportedBrowser>
 </template>

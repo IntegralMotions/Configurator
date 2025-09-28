@@ -1,32 +1,28 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-@tailwind utilities;
+@theme static {
+  --color-accent-50:  #E9F2F8;
+  --color-accent-100: #CFE3EF;
+  --color-accent-200: #9BC3DE;
+  --color-accent-300: #5FA3CC;
+  --color-accent-400: #005B99;
+  --color-accent-500: #1C6DA6;
+  --color-accent-600: #005B99;
+  --color-accent-700: #004A80;
+  --color-accent-800: #003366;
+  --color-accent-900: #001F3F;
+  --color-accent-950: #00152A;
 
-@theme {
-  /* brand (blue) */
-  --color-brand-50:  #E6F2FA;
-  --color-brand-100: #CCE5F5;
-  --color-brand-200: #99CCEB;
-  --color-brand-300: #66B2E0;
-  --color-brand-400: #3389C7;
-  --color-brand-500: #005B99; /* main blue */
-  --color-brand-600: #004D80;
-  --color-brand-700: #003E66;
-  --color-brand-800: #00314D;
-  --color-brand-900: #002333;
-  --color-brand-950: #001A26;
-
-  /* accent (green) */
-  --color-accent-50:  #F2FAE6;
-  --color-accent-100: #E6F4CD;
-  --color-accent-200: #CEEAA1;
-  --color-accent-300: #B8DF79;
-  --color-accent-400: #AEDD66;
-  --color-accent-500: #A4D65E; /* main green */
-  --color-accent-600: #8CBE46;
-  --color-accent-700: #74A62E;
-  --color-accent-800: #5C8E16;
-  --color-accent-900: #476F10;
-  --color-accent-950: #2F470A;
+  --color-brand-50:  #F9FCF2;
+  --color-brand-100: #F1FAE5;
+  --color-brand-200: #E3F4C8;
+  --color-brand-300: #CFEBA5;
+  --color-brand-400: #A4D65E;
+  --color-brand-500: #8FCB3D;
+  --color-brand-600: #83BF36;
+  --color-brand-700: #6AA12D;
+  --color-brand-800: #527F24;
+  --color-brand-900: #3B5C1A;
+  --color-brand-950: #21300E;
 }
