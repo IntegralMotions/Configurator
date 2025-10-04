@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { isDataView } from 'util/types';
-import UsbProtocolSelector from '~/components/UsbProtocolSelector.vue';
-
 const message = ref<string>('')
 
 useHead({
@@ -10,6 +7,7 @@ useHead({
         { name: 'description', content: 'A serial monitor in the browser you can use from anywhere' }
     ]
 })
+
 const usb = useUsb()
 const uiPreferences = useState('serial.uiPreferences', () => ({
     autoScroll: true,
@@ -23,24 +21,23 @@ async function toggleConnect() {
         usb.close()
     }
     else {
-        usb.connect()
+        usb.start(receive)
     }
 }
 
 async function send() {
     const bytes = new TextEncoder().encode(message.value);
+    data.value += `> ${message.value}\n`
     message.value = '';
     usb.write(bytes)
 }
 
 function receive(received: Uint8Array<ArrayBufferLike>) {
-    console.log(received)
+    console.log(new TextDecoder().decode(received))
     data.value += new TextDecoder().decode(received)
 }
 
 const data = ref('')
-
-usb.onData(receive)
 
 </script>
 
@@ -56,9 +53,6 @@ usb.onData(receive)
                                 <UChip standalone inset class="mr-2" :color="usb.connected.value ? 'success' : 'error'">
                                 </UChip>
                                 {{ usb.deviceName.value }}
-                            </template>
-                            <template #footer>
-                                <UsbProtocolSelector />
                             </template>
                         </ScrollContent>
                     </div>
@@ -149,7 +143,7 @@ usb.onData(receive)
                         <!-- Connect / Disconnect -->
                         <UButton :color="usb.connected.value ? 'error' : 'primary'"
                             :icon="usb.connected.value ? 'material-symbols:power-plug-off-rounded' : 'material-symbols:power-plug-rounded'"
-                            :disabled="!usb.hasDevice.value" @click="toggleConnect" class="ml-4">
+                            @click="toggleConnect" class="ml-4">
                             {{ usb.connected.value ? 'Disconnect' : 'Connect' }}
                         </UButton>
                     </div>

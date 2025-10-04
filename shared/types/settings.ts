@@ -26,3 +26,5 @@ export type Setting = BoolSetting | NumberSetting | StringSetting | OptionsSetti
 export type Group = { id: string; label: string; settings: Setting[] }
 export type Module = { id: string, label: string, groups: Group[] }
 export type Device = { deviceInfo?: { model?: string; fw?: string }, modules: Module[] }
+
+export type SuccessResult = { success: boolean, errorMessage?: string }
