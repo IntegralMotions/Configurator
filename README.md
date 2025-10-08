@@ -18,6 +18,9 @@ You should have a development server running on `http://localhost:3000`.
 
 We use Nuxt UI as our component library, the docs for this are available [here](https://ui.nuxt.com/getting-started)
 
+## Deploy from Vercel
+We used [this](https://gist.github.com/ky28059/1c9af929a9030105da8cf00006b50484) tutorial to make the pipelines to deploy to vercel.
+
 ## Usage
 
 This site can be used to configure the motor driver. 
