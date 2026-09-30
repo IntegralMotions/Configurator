@@ -43,7 +43,6 @@ const data = ref('')
 
 <template>
     <UnsupportedBrowser>
-
         <template v-if="usb.isSupported.value">
             <ScrollContent>
                 <template #header>

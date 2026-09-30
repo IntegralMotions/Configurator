@@ -1,30 +1,52 @@
-type BaseSetting<T, U extends string> = {
-    address: number,
-    id: string
-    label: string
-    type: U
+export type SettingValue = boolean | number
+
+export type SettingOption<T extends SettingValue> = {
     value: T
-    unit?: string
-    readonly?: boolean
+    id: string
 }
 
-export type BoolSetting = BaseSetting<boolean, "bool">
-
-export type NumberSetting = BaseSetting<number, "int" | "float" | "range"> & {
+export type SettingLimits<T extends SettingValue> = {
     min?: number
     max?: number
     step?: number
+    isRange: boolean
+    options: SettingOption<T>[]
 }
 
-export type StringSetting = BaseSetting<string, "string">
-
-export type OptionsSetting = BaseSetting<string | number, "options"> & {
-    options: (string | number)[]
+export type BaseSetting<T extends SettingValue> = {
+    address: number
+    id: string
+    value: T
+    unit?: string
+    readonly?: true
+    limits: SettingLimits<T>
 }
 
-export type Setting = BoolSetting | NumberSetting | StringSetting | OptionsSetting
-export type Group = { id: string; label: string; settings: Setting[] }
-export type Module = { id: string, label: string, groups: Group[] }
-export type Device = { deviceInfo?: { model?: string; fw?: string }, modules: Module[] }
+export type NumericSettingType =
+    | "i8" | "u8"
+    | "i16" | "u16"
+    | "i32" | "u32"
+    | "i64" | "u64"
+    | "f32" | "f64"
 
-export type SuccessResult = { success: boolean, errorMessage?: string }
+export type Setting =
+    | { type: "bool", value: BaseSetting<boolean> }
+    | { type: NumericSettingType, value: BaseSetting<number> }
+
+export type Group = {
+    id: string
+    settings: Setting[]
+}
+
+export type Module = {
+    id: string
+    groups: Group[]
+}
+
+export type Device = {
+    deviceInfo: {
+        model: string | null
+        firmwareVersion: string | null
+    }
+    modules: Module[]
+}

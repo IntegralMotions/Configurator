@@ -1,29 +1,45 @@
-import type { Device, SuccessResult } from "./settings"
+import type { Device, SettingType } from "./settings"
 
-export type MessageOpCode = "read.device" | "write.device" | ""
+export type MessageOpCode = "read.device" | "write.settings"
 
-export type Message<TPayload = any> = {
-    op: string
-    type: "request" | "response" | "event"
-    payload?: TPayload
+export type Message<TPayload> = {
+    msgType: "request" | "response" | "event"
+    opCode: MessageOpCode
+    payload: TPayload
 }
 
-export type ReadDeviceMessage = Message<undefined> & {
-    op: "read.device"
-    type: "request"
+export type ReadDeviceMessage = Message<null> & {
+    msgType: "request"
+    opCode: "read.device"
 }
 
 export type ReadDeviceResponse = Message<Device> & {
-    op: "read.device",
-    type: "response"
+    msgType: "response"
+    opCode: "read.device"
 }
 
-export type WriteDeviceMessage = Message<Device> & {
-    op: "write.device"
-    type: "request"
+export type WriteSetting = {
+    address: number
+    type: SettingType
+    value: {
+        value: boolean | number
+    }
 }
 
-export type WriteDeviceResult = Message<SuccessResult> & {
-    op: "write.device",
-    type: "response"
+export type WriteSettingsRequest = Message<{ values: WriteSetting[] }> & {
+    msgType: "request"
+    opCode: "write.settings"
 }
+
+export type WriteSettingsResponse = Message<{
+    values: Array<{
+        address: number
+        success: boolean
+        errorMessage?: string
+    }>
+}> & {
+    msgType: "response"
+    opCode: "write.settings"
+}
+
+export type WriteSettingsResultEntry = WriteSettingsResponse["payload"]["values"][number]

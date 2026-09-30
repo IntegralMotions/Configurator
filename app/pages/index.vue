@@ -1,11 +1,11 @@
 <template>
   <UContainer class="flex items-center justify-center">
     <div class="grid gap-12 md:grid-cols-2 max-w-6xl w-full">
-      <NuxtLink to="/serial" class="block">
+      <NuxtLink :to="localePath('/serial')" class="block">
         <UCard class="overflow-hidden flex flex-col h-full transition hover:shadow-lg">
           <div
             class="h-64 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-100 dark:from-slate-800 dark:to-slate-700">
-            <UIcon name="i-ph-serial-port" class="w-24 h-24 opacity-80" />
+            <UIcon name="i-ph-usb" class="w-24 h-24 opacity-80" />
           </div>
           <div class="p-8 space-y-3">
             <h2 class="text-2xl font-semibold">Serial Monitor</h2>
@@ -14,7 +14,7 @@
         </UCard>
       </NuxtLink>
 
-      <NuxtLink to="/configurator" class="block">
+      <NuxtLink :to="localePath('/configurator')" class="block">
         <UCard class="overflow-hidden flex flex-col h-full transition hover:shadow-lg">
           <div
             class="h-64 flex items-center justify-center bg-gradient-to-br from-indigo-400 to-indigo-600 dark:from-indigo-700 dark:to-indigo-900">
@@ -30,6 +30,8 @@
   </UContainer>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const localePath = useLocalePath();
+</script>
 
 <style></style>
