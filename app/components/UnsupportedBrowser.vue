@@ -1,7 +1,6 @@
 <!-- components/UnsupportedBrowser.vue -->
 <template>
     <ClientOnly>
-
         <div v-if="!isSupported" class="w-full grid place-items-center p-6">
             <UCard class="max-w-md w-full text-center space-y-4">
                 <template #header>
@@ -11,7 +10,7 @@
                     </div>
                 </template>
 
-                <p>Your browser does not support WebUSB or Web Serial.</p>
+                <p>Your browser does not support Web Serial.</p>
                 <p class="text-sm text-gray-500">
                     Please use a Chromium-based browser (e.g. Chrome, Edge) over
                     <code>https://</code>.
